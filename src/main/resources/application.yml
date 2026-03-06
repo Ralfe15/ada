@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: eventmaster-ticket-sales
+
+  datasource:
+    url: jdbc:h2:mem:eventmaster
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+jwt:
+  secret: EventMasterSecretKey2024ADAProjetoFinalChaveSegura256bits!
+  expiration-ms: 3600000
+
+server:
+  port: 8080

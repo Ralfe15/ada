@@ -1,0 +1,46 @@
+# --- Build output ---
+target/
+
+# --- IDE ---
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+bin/
+out/
+*.swp
+*~
+
+# --- Maven Wrapper downloaded distribution ---
+.mvn/wrapper/maven-wrapper.jar
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs ---
+*.log
+spring.log
+
+# --- Environment / secrets ---
+.env
+*.env
+application-local.yml
+application-local.properties
+
+# --- H2 database files ---
+*.db
+*.mv.db
+*.trace.db
+
+# --- Package files ---
+*.jar
+*.war
+*.ear
+!.mvn/wrapper/maven-wrapper.jar
