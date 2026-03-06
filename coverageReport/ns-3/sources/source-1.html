@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PurchaseTicketUseCase</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.eventmaster.ticketsales.application.usecase</a>
+</div>
+
+<h1>Coverage Summary for Class: PurchaseTicketUseCase (com.eventmaster.ticketsales.application.usecase)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PurchaseTicketUseCase</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.2%
+  </span>
+  <span class="absValue">
+    (25/26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.eventmaster.ticketsales.application.usecase;
+&nbsp;
+&nbsp;import com.eventmaster.ticketsales.application.dto.PurchaseRequest;
+&nbsp;import com.eventmaster.ticketsales.application.dto.PurchaseResponse;
+&nbsp;import com.eventmaster.ticketsales.domain.model.Event;
+&nbsp;import com.eventmaster.ticketsales.domain.model.Order;
+&nbsp;import com.eventmaster.ticketsales.domain.repository.EventRepository;
+&nbsp;import com.eventmaster.ticketsales.domain.repository.OrderRepository;
+&nbsp;import com.eventmaster.ticketsales.domain.strategy.PaymentStrategy;
+&nbsp;import com.eventmaster.ticketsales.domain.strategy.PaymentStrategyFactory;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;
+&nbsp;/**
+&nbsp; * Caso de uso: Compra de Ingressos.
+&nbsp; *
+&nbsp; * Orquestra a lógica de negócio:
+&nbsp; * 1. Busca o evento
+&nbsp; * 2. Verifica disponibilidade de ingressos
+&nbsp; * 3. Processa o pagamento usando Strategy Pattern
+&nbsp; * 4. Cria e confirma o pedido
+&nbsp; *
+&nbsp; * Princípio: Responsabilidade Única (SOLID - S) — esta classe tem uma única razão para mudar.
+&nbsp; */
+&nbsp;public class PurchaseTicketUseCase {
+&nbsp;
+&nbsp;    private final EventRepository eventRepository;
+&nbsp;    private final OrderRepository orderRepository;
+&nbsp;
+<b class="fc">&nbsp;    public PurchaseTicketUseCase(EventRepository eventRepository, OrderRepository orderRepository) {</b>
+<b class="fc">&nbsp;        this.eventRepository = eventRepository;</b>
+<b class="fc">&nbsp;        this.orderRepository = orderRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public PurchaseResponse execute(PurchaseRequest request) {
+&nbsp;        // 1. Buscar evento
+<b class="fc">&nbsp;        Event event = eventRepository.findById(request.getEventId())</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Evento não encontrado: &quot; + request.getEventId()));</b>
+&nbsp;
+&nbsp;        // 2. Reservar ingressos (valida disponibilidade internamente)
+<b class="fc">&nbsp;        event.reserveTickets(request.getQuantity());</b>
+&nbsp;
+&nbsp;        // 3. Calcular valor total
+<b class="fc">&nbsp;        BigDecimal totalAmount = event.getTicketPrice().multiply(BigDecimal.valueOf(request.getQuantity()));</b>
+&nbsp;
+&nbsp;        // 4. Processar pagamento via Strategy Pattern
+<b class="fc">&nbsp;        PaymentStrategy paymentStrategy = PaymentStrategyFactory.getStrategy(request.getPaymentMethod());</b>
+<b class="fc">&nbsp;        boolean paymentApproved = paymentStrategy.pay(totalAmount);</b>
+&nbsp;
+<b class="pc">&nbsp;        if (!paymentApproved) {</b>
+<b class="nc">&nbsp;            throw new IllegalStateException(&quot;Pagamento recusado.&quot;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // 5. Criar e confirmar pedido
+<b class="fc">&nbsp;        Order order = new Order(</b>
+<b class="fc">&nbsp;                event.getId(),</b>
+<b class="fc">&nbsp;                request.getCustomerEmail(),</b>
+<b class="fc">&nbsp;                request.getQuantity(),</b>
+&nbsp;                totalAmount,
+<b class="fc">&nbsp;                request.getPaymentMethod()</b>
+&nbsp;        );
+<b class="fc">&nbsp;        order.confirm();</b>
+&nbsp;
+&nbsp;        // 6. Persistir
+<b class="fc">&nbsp;        eventRepository.save(event);</b>
+<b class="fc">&nbsp;        orderRepository.save(order);</b>
+&nbsp;
+&nbsp;        // 7. Retornar resposta
+<b class="fc">&nbsp;        return new PurchaseResponse(</b>
+<b class="fc">&nbsp;                order.getId(),</b>
+<b class="fc">&nbsp;                event.getId(),</b>
+<b class="fc">&nbsp;                order.getQuantity(),</b>
+<b class="fc">&nbsp;                order.getTotalAmount(),</b>
+<b class="fc">&nbsp;                paymentStrategy.getPaymentMethodName(),</b>
+<b class="fc">&nbsp;                order.getStatus().name()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-06 16:54</div>
+</div>
+</body>
+</html>

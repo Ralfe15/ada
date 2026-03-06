@@ -1,0 +1,153 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PurchaseRequest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.eventmaster.ticketsales.application.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: PurchaseRequest (com.eventmaster.ticketsales.application.dto)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PurchaseRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (5/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    64.3%
+  </span>
+  <span class="absValue">
+    (9/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.eventmaster.ticketsales.application.dto;
+&nbsp;
+&nbsp;import com.eventmaster.ticketsales.domain.model.PaymentMethod;
+&nbsp;import jakarta.validation.constraints.Email;
+&nbsp;import jakarta.validation.constraints.Min;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;
+&nbsp;import java.util.UUID;
+&nbsp;
+&nbsp;/**
+&nbsp; * DTO de entrada para a compra de ingressos.
+&nbsp; * Utiliza Bean Validation para proteção contra inputs inválidos (OWASP Top 10).
+&nbsp; */
+&nbsp;public class PurchaseRequest {
+&nbsp;
+&nbsp;    @NotNull(message = &quot;O ID do evento é obrigatório.&quot;)
+&nbsp;    private UUID eventId;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;O e-mail do cliente é obrigatório.&quot;)
+&nbsp;    @Email(message = &quot;E-mail inválido.&quot;)
+&nbsp;    private String customerEmail;
+&nbsp;
+&nbsp;    @Min(value = 1, message = &quot;A quantidade deve ser pelo menos 1.&quot;)
+&nbsp;    private int quantity;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;O método de pagamento é obrigatório.&quot;)
+&nbsp;    private PaymentMethod paymentMethod;
+&nbsp;
+<b class="nc">&nbsp;    public PurchaseRequest() {}</b>
+&nbsp;
+<b class="fc">&nbsp;    public PurchaseRequest(UUID eventId, String customerEmail, int quantity, PaymentMethod paymentMethod) {</b>
+<b class="fc">&nbsp;        this.eventId = eventId;</b>
+<b class="fc">&nbsp;        this.customerEmail = customerEmail;</b>
+<b class="fc">&nbsp;        this.quantity = quantity;</b>
+<b class="fc">&nbsp;        this.paymentMethod = paymentMethod;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public UUID getEventId() { return eventId; }</b>
+<b class="nc">&nbsp;    public void setEventId(UUID eventId) { this.eventId = eventId; }</b>
+&nbsp;
+<b class="fc">&nbsp;    public String getCustomerEmail() { return customerEmail; }</b>
+<b class="nc">&nbsp;    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }</b>
+&nbsp;
+<b class="fc">&nbsp;    public int getQuantity() { return quantity; }</b>
+<b class="nc">&nbsp;    public void setQuantity(int quantity) { this.quantity = quantity; }</b>
+&nbsp;
+<b class="fc">&nbsp;    public PaymentMethod getPaymentMethod() { return paymentMethod; }</b>
+<b class="nc">&nbsp;    public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-06 16:54</div>
+</div>
+</body>
+</html>
